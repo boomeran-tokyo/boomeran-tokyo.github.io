@@ -107,10 +107,8 @@
 								$window.off('load.banner2');
 
 							// Append video if supported.
-								if (!skel.vars.mobile
-								&&	!skel.breakpoint('large').active
-								&&	skel.vars.IEVersion > 9)
-									$banner2.append('<video autoplay loop muted><source src="/images/movie2.mp4" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
+								if (skel.vars.IEVersion > 9)
+									$banner2.append('<video autoplay loop muted playsinline><source src="/images/movie2.mp4" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
 
 						});
 
