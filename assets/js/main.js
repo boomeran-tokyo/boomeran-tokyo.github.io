@@ -108,11 +108,11 @@
 
 							// Append video if supported.
 								if (skel.vars.IEVersion > 9) {
-									// デバイス判定でPC用とモバイル用を使い分け
-									var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+									// 画面幅で動画を使い分け（768px以下でモバイル用）
+									var isMobile = window.innerWidth <= 768;
 									var videoSrc = isMobile ? '/images/movie2_sp.mp4' : '/images/movie2.mp4';
 									
-									$banner2.append('<video autoplay loop muted playsinline><source src="' + videoSrc + '" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
+									$banner2.append('<video autoplay loop muted playsinline preload="auto"><source src="' + videoSrc + '" type="video/mp4" /></video>');
 								}
 
 						});
