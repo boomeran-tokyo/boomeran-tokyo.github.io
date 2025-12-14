@@ -107,8 +107,13 @@
 								$window.off('load.banner2');
 
 							// Append video if supported.
-								if (skel.vars.IEVersion > 9)
-									$banner2.append('<video autoplay loop muted playsinline><source src="/images/movie2.mp4" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
+								if (skel.vars.IEVersion > 9) {
+									// デバイス判定でPC用とモバイル用を使い分け
+									var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+									var videoSrc = isMobile ? '/images/movie2_sp.mp4' : '/images/movie2.mp4';
+									
+									$banner2.append('<video autoplay loop muted playsinline><source src="' + videoSrc + '" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
+								}
 
 						});
 
