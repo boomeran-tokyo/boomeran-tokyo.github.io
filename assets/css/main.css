@@ -3624,7 +3624,7 @@
 			z-index: 2;
 		}
 
-		#banner h1 {
+		#banner h2 {
 			font-size: 7em;
 			line-height: 1.1;
 			font-family: "Lobster", cursive;
@@ -3776,7 +3776,7 @@
 				padding: 8em 2em 4em 2em;
 			}
 
-				#banner h1 {
+				#banner h2 {
 					font-size: 6em;
 				}
 
@@ -3784,7 +3784,7 @@
 
 		@media screen and (max-width: 480px) {
 
-			#banner h1 {
+			#banner h2 {
 				font-size: 4em;
 			}
 
