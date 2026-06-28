@@ -617,7 +617,19 @@ p { margin: 0 0 1em; }
 .schedule-card:nth-child(2):hover { background: var(--blue);   color: var(--paper); }
 .schedule-card:nth-child(3):hover { background: var(--yellow); color: var(--ink); }
 .schedule-card:nth-child(4):hover { background: var(--ink);    color: var(--paper); }
-.schedule-card .ico { font-size: 36px; display: block; margin-bottom: 10px; }
+.schedule-card .ico {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-bottom: 10px;
+}
+.schedule-card .ico svg {
+	display: block;
+	width: 36px;
+	height: 36px;
+}
 .schedule-card h3 { font-family: var(--font-display); letter-spacing: 0.12em; font-size: 14px; margin-bottom: 12px; }
 .schedule-card .big { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); line-height: 1; margin: 0 0 4px; }
 .schedule-card p { margin: 0; font-size: 14px; }
