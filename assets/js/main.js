@@ -112,7 +112,7 @@
 									var isMobile = window.innerWidth <= 768;
 									var videoSrc = isMobile ? '/images/movie2_sp.mp4' : '/images/movie2.mp4';
 									
-									$banner2.append('<video autoplay loop muted playsinline preload="auto"><source src="' + videoSrc + '" type="video/mp4" /></video>');
+									$banner2.append('<video autoplay loop muted playsinline preload="metadata"><source src="' + videoSrc + '" type="video/mp4" /></video>');
 								}
 
 						});
