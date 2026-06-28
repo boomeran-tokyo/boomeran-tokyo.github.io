@@ -47,8 +47,8 @@
 		const isMobile = window.matchMedia('(max-width: 720px)').matches;
 		// 既存画像ディレクトリを参照
 		const src = isMobile
-			? '../../images/movie2_sp.mp4'
-			: '../../images/movie2.mp4';
+			? 'images/movie2_sp.mp4'
+			: 'images/movie2.mp4';
 
 		const source = document.createElement('source');
 		source.src = src;
