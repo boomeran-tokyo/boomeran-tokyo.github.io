@@ -41,35 +41,37 @@
 		});
 	}
 
-	/* -------- 3. ヒーロー動画セットアップ (デスクトップ / モバイル振り分け) -------- */
+	/* -------- 3. ヒーロー動画セットアップ -------- */
+	// モバイル向け movie2_sp.mp4 は HTML 側 <source> で静的に指定済み (iOS の autoplay 要件)。
+	// デスクトップ幅のときだけ高画質版 movie2.mp4 に差し替える。
+	// poster は HTML から外し、再生失敗時のみ JS でフォールバックとして付与する。
 	const video = document.getElementById('hero-video');
 	if (video) {
-		const isMobile = window.matchMedia('(max-width: 720px)').matches;
-		// 既存画像ディレクトリを参照
-		const src = isMobile
-			? 'images/movie2_sp.mp4'
-			: 'images/movie2.mp4';
-
-		const source = document.createElement('source');
-		source.src = src;
-		source.type = 'video/mp4';
-		video.appendChild(source);
-
-		// 一部ブラウザで自動再生が阻まれた場合のフォールバック
-		const tryPlay = () => {
-			const p = video.play();
-			if (p && typeof p.catch === 'function') {
-				p.catch(() => {
-					// 再生失敗時はポスター画像のまま静止
-				});
+		const isDesktop = window.matchMedia('(min-width: 721px)').matches;
+		if (isDesktop) {
+			const source = video.querySelector('source');
+			if (source) {
+				source.src = 'images/movie2.mp4';
+				video.load();
 			}
-		};
-		video.addEventListener('loadeddata', tryPlay, { once: true });
+		}
 
-		// reduce-motion 配慮: 設定されていれば動画を一時停止
+		// 再生開始フラグと、未再生のままならフォールバック画像を表示するハンドラ
+		let hasPlayed = false;
+		video.addEventListener('playing', () => { hasPlayed = true; }, { once: true });
+		const showFallback = () => {
+			if (!hasPlayed) video.setAttribute('poster', 'images/all.jpg');
+		};
+		video.addEventListener('error', showFallback);
+		video.addEventListener('stalled', showFallback);
+		// 5 秒経っても再生開始しなければフォールバック (autoplay 拒否, 低電力モード等)
+		setTimeout(showFallback, 5000);
+
+		// reduce-motion 配慮: 設定されていれば動画を一時停止 + フォールバック表示
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			video.removeAttribute('autoplay');
 			video.pause();
+			video.setAttribute('poster', 'images/all.jpg');
 		}
 	}
 
