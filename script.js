@@ -70,13 +70,6 @@
 			video.addEventListener('stalled', showFallback);
 			// 5 秒経っても再生開始しなければフォールバック (autoplay 拒否, 低電力モード等)
 			setTimeout(showFallback, 5000);
-
-			// reduce-motion 配慮: 設定されていれば動画を一時停止 + フォールバック表示
-			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-				video.removeAttribute('autoplay');
-				video.pause();
-				video.setAttribute('poster', 'images/all.jpg');
-			}
 		});
 	}
 
