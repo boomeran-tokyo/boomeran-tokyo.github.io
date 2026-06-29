@@ -41,38 +41,43 @@
 		});
 	}
 
-	/* -------- 3. ヒーロー動画セットアップ -------- */
-	// モバイル向け movie2_sp.mp4 は HTML 側 <source> で静的に指定済み (iOS の autoplay 要件)。
-	// デスクトップ幅のときだけ高画質版 movie2.mp4 に差し替える。
-	// poster は HTML から外し、再生失敗時のみ JS でフォールバックとして付与する。
-	const video = document.getElementById('hero-video');
-	if (video) {
-		const isDesktop = window.matchMedia('(min-width: 721px)').matches;
-		if (isDesktop) {
-			const source = video.querySelector('source');
-			if (source) {
-				source.src = 'images/movie2.mp4';
-				video.load();
+	/* -------- 3. ヒーロー動画セットアップ (旧版 rev-2020.03 方式) -------- */
+	// iOS Safari/Chrome での autoplay 安定化のため、HTML には <video> を置かず、
+	// window.load 後に <video><source></video> を innerHTML で一括挿入する。
+	// (静的配置でも仕様上は動くはずだが、実機で autoplay が拒否されるケースが多発したため)
+	const heroWrap = document.querySelector('.hero-video-wrap');
+	if (heroWrap) {
+		window.addEventListener('load', () => {
+			const isMobile = window.matchMedia('(max-width: 720px)').matches;
+			const src = isMobile ? 'images/movie2_sp.mp4' : 'images/movie2.mp4';
+			heroWrap.insertAdjacentHTML(
+				'afterbegin',
+				'<video class="hero-video" id="hero-video" autoplay loop muted playsinline preload="metadata">' +
+				'<source src="' + src + '" type="video/mp4">' +
+				'</video>'
+			);
+
+			const video = document.getElementById('hero-video');
+			if (!video) return;
+
+			// 再生開始フラグと、未再生のままならフォールバック画像を表示するハンドラ
+			let hasPlayed = false;
+			video.addEventListener('playing', () => { hasPlayed = true; }, { once: true });
+			const showFallback = () => {
+				if (!hasPlayed) video.setAttribute('poster', 'images/all.jpg');
+			};
+			video.addEventListener('error', showFallback);
+			video.addEventListener('stalled', showFallback);
+			// 5 秒経っても再生開始しなければフォールバック (autoplay 拒否, 低電力モード等)
+			setTimeout(showFallback, 5000);
+
+			// reduce-motion 配慮: 設定されていれば動画を一時停止 + フォールバック表示
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				video.removeAttribute('autoplay');
+				video.pause();
+				video.setAttribute('poster', 'images/all.jpg');
 			}
-		}
-
-		// 再生開始フラグと、未再生のままならフォールバック画像を表示するハンドラ
-		let hasPlayed = false;
-		video.addEventListener('playing', () => { hasPlayed = true; }, { once: true });
-		const showFallback = () => {
-			if (!hasPlayed) video.setAttribute('poster', 'images/all.jpg');
-		};
-		video.addEventListener('error', showFallback);
-		video.addEventListener('stalled', showFallback);
-		// 5 秒経っても再生開始しなければフォールバック (autoplay 拒否, 低電力モード等)
-		setTimeout(showFallback, 5000);
-
-		// reduce-motion 配慮: 設定されていれば動画を一時停止 + フォールバック表示
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			video.removeAttribute('autoplay');
-			video.pause();
-			video.setAttribute('poster', 'images/all.jpg');
-		}
+		});
 	}
 
 	/* -------- 4. スクロール連動の出現アニメーション (Intersection Observer) -------- */
